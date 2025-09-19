@@ -4,7 +4,8 @@ import * as Yup from "yup";
 import type { NewNote } from "../../types/note";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { createNote, NewNoteData, getTags } from "@/lib/api";
+import { createNote } from "@/lib/api/api/clientApi";
+import { NewNoteData, getTags } from "@/lib/api/api/serverApi";
 import { useNoteDraftStore } from "@/lib/store/noteStore";
 import { useEffect } from "react";
 
