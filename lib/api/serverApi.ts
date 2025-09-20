@@ -7,6 +7,7 @@ import { nextServer } from "./api";
 import { isAxiosError } from "axios";
 import { NoteTag } from "@/types/note";
 import { RegisterRequest } from "@/types/auth";
+import { AxiosResponse } from "axios";
 
 const DEFAULT_TAGS = ["Todo", "Personal", "Work", "Shopping", "Meeting"];
 
@@ -101,14 +102,14 @@ export async function updateUser(
   }
 }
 
-export async function checkSession(
-  refreshToken: string
-): Promise<SessionResponse> {
+export async function checkSession(): Promise<AxiosResponse<SessionResponse>> {
   try {
-    const { data } = await nextServer.post<SessionResponse>("/auth/refresh", {
-      refreshToken,
+    const headers = await getAuthHeaders();
+    const response = await nextServer.get<SessionResponse>("/auth/session", {
+      ...headers,
+      withCredentials: true,
     });
-    return data;
+    return response;
   } catch (error) {
     if (isAxiosError(error)) {
       throw new Error(

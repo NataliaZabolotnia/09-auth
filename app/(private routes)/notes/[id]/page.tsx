@@ -8,11 +8,11 @@ import NoteDetailsClient from "@/app/(private routes)/notes/[id]/NoteDetails.cli
 import { Metadata } from "next";
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = params;
+  const { id } = await params;
   const note = await fetchNoteById(id);
 
   return {
