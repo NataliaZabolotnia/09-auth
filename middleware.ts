@@ -18,18 +18,19 @@ export async function middleware(req: NextRequest) {
   const sessionValid = !!accessToken;
   if (!accessToken && refreshToken) {
     try {
-      const newTokens = await checkSession(refreshToken);
+      const newTokens = await checkSession();
+      console.log(newTokens);
 
       const res = NextResponse.next();
-      if (newTokens.accessToken) {
-        res.cookies.set("accessToken", newTokens.accessToken, {
+      if (newTokens.data.accessToken) {
+        res.cookies.set("accessToken", newTokens.data.accessToken, {
           httpOnly: true,
           secure: true,
           path: "/",
         });
       }
-      if (newTokens.refreshToken) {
-        res.cookies.set("refreshToken", newTokens.refreshToken, {
+      if (newTokens.data.refreshToken) {
+        res.cookies.set("refreshToken", newTokens.data.refreshToken, {
           httpOnly: true,
           secure: true,
           path: "/",
