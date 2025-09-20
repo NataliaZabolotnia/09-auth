@@ -22,16 +22,25 @@ export default function AuthProvider({
   useEffect(() => {
     async function fetchUser() {
       try {
-        await checkSession();
-        const user = await getUserProfile();
-        setUser(user);
+        const hasValidSession = await checkSession();
 
-        if (PUBLIC_ROUTES.includes(pathname)) router.replace("/sign-in");
+        if (hasValidSession) {
+          const user = await getUserProfile();
+          setUser(user);
+
+          if (PUBLIC_ROUTES.includes(pathname)) router.replace("/profile");
+        } else {
+          clearIsAuthenticated();
+
+          if (PRIVATE_ROUTES.some((route) => pathname.startsWith(route))) {
+            router.replace("/sign-in");
+          }
+        }
       } catch (err) {
         clearIsAuthenticated();
 
         if (PRIVATE_ROUTES.some((route) => pathname.startsWith(route))) {
-          router.replace("/profile");
+          router.replace("/sign-in");
         }
       } finally {
         setLoading(false);

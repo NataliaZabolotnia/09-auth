@@ -51,9 +51,10 @@ export async function logoutClient(): Promise<void> {
   }
 }
 
-export async function checkSession(): Promise<void> {
+export async function checkSession(): Promise<boolean> {
   try {
-    await nextServer.get("/auth/session");
+    const response = await nextServer.get("/auth/session");
+    return response.data.success === true;
   } catch (error) {
     if (isAxiosError(error)) {
       throw new Error(error.response?.data?.message || "Session check failed");

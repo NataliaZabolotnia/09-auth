@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import css from "./TagsMenu.module.css";
 import Link from "next/link";
 import { getTagsClient } from "@/lib/api/clientApi";
+import { useAuthStore } from "@/lib/store/authStore";
 
 // interface TagsMenuProps {
 //   tags: string[];
@@ -11,11 +12,13 @@ import { getTagsClient } from "@/lib/api/clientApi";
 
 export default function TagsMenu() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { isAuthenticated } = useAuthStore();
   const [tags, setTags] = useState<string[]>([]);
   useEffect(() => {
-    getTagsClient().then((data) => setTags(data));
-  }, []);
+    if (isAuthenticated) {
+      getTagsClient().then((data) => setTags(data));
+    }
+  }, [isAuthenticated]);
   const toggle = () => setIsOpen(!isOpen);
   return (
     <div className={css.menuContainer}>
