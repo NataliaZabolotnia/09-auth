@@ -1,11 +1,12 @@
 import { User } from "@/types/user";
 import { Note } from "@/types/note";
-import { RegisterRequest, LoginRequest } from "@/lib/api/api/api";
+import { LoginRequest } from "@/types/auth";
 import { SessionResponse } from "@/types/auth";
 import { cookies } from "next/headers";
 import { nextServer } from "./api";
 import { isAxiosError } from "axios";
 import { NoteTag } from "@/types/note";
+import { RegisterRequest } from "@/types/auth";
 
 const DEFAULT_TAGS = ["Todo", "Personal", "Work", "Shopping", "Meeting"];
 
@@ -68,7 +69,7 @@ export async function logoutServer(): Promise<void> {
   }
 }
 
-export default async function getUserProfile(): Promise<User> {
+export async function getUserProfile(): Promise<User> {
   try {
     const headers = await getAuthHeaders();
     const { data: user } = await nextServer.get<User>("/users/me", headers);

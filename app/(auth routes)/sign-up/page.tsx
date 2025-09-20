@@ -4,17 +4,24 @@ import css from "@/app/(auth routes)/sign-up/SignInPage.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ApiError } from "@/app/api/api";
-import { register, RegisterRequest } from "@/lib/api/api/api";
+import { RegisterRequest } from "@/types/auth";
 import { useAuthStore } from "@/lib/store/authStore";
-import { User } from "@/lib/api/api/api";
+import { User } from "@/types/user";
+import { registerClient } from "@/lib/api/clientApi";
+
 export default function SignUp() {
   const router = useRouter();
   const [error, setError] = useState("");
   const setUser = useAuthStore((state) => state.setUser);
-  const handleSubmit = async (FormData: FormData) => {
+
+  const handleSubmit = async (formData: FormData) => {
     try {
-      const formValues = Object.fromEntries(FormData) as RegisterRequest;
-      const res = await register(formValues);
+      const formValues = Object.fromEntries(formData) as RegisterRequest;
+      console.log(formValues);
+
+      const res = await registerClient(formValues);
+      console.log(res);
+
       if (res) {
         setUser(res);
         router.push("/profile");
@@ -62,7 +69,7 @@ export default function SignUp() {
             </button>
           </div>
 
-          <p className={css.error}>Error</p>
+          {error && <p className={css.error}>{error}</p>}
         </form>
       </main>
     </>

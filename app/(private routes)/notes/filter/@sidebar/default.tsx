@@ -1,5 +1,5 @@
-import css from "@/app/notes/filter/@sidebar/SidebarNotes.module.css";
-import { getTags } from "@/lib/api";
+import css from "@/app/(private routes)/notes/filter/@sidebar/SidebarNotes.module.css";
+import { getTags } from "@/lib/api/serverApi";
 import Link from "next/link";
 
 export default async function SidebarNotes() {

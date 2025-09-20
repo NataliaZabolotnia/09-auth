@@ -16,7 +16,6 @@ export default function App() {
           NoteHub offers a streamlined experience for anyone who values clarity
           and productivity.
         </p>
-        console.log(res.data);
       </div>
     </main>
   );

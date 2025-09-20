@@ -1,0 +1,7 @@
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 250px;
+  color: rgb(3, 80, 73);
+}

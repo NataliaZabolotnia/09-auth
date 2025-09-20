@@ -4,17 +4,19 @@ import css from "@/app/(auth routes)/sign-up/SignInPage.module.css";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ApiError } from "@/app/api/api";
-import { register, RegisterRequest } from "@/lib/api/api/api";
+import { RegisterRequest } from "@/types/auth";
 import { useAuthStore } from "@/lib/store/authStore";
+import { loginClient } from "@/lib/api/clientApi";
 
 export default function SignIn() {
   const router = useRouter();
   const [error, setError] = useState("");
   const setUser = useAuthStore((state) => state.setUser);
-  const handleSubmit = async (FormData: FormData) => {
+
+  const handleSubmit = async (formData: FormData) => {
     try {
-      const formValues = Object.fromEntries(FormData) as RegisterRequest;
-      const res = await register(formValues);
+      const formValues = Object.fromEntries(formData) as RegisterRequest;
+      const res = await loginClient(formValues);
       if (res) {
         setUser(res);
         router.push("/profile");
@@ -32,8 +34,9 @@ export default function SignIn() {
   return (
     <>
       <main className={css.mainContent}>
-        <h1 className={css.formTitle}>Sign up</h1>
-        <form className={css.form}>
+        <form className={css.form} action={handleSubmit}>
+          <h1 className={css.formTitle}>Sign in</h1>
+
           <div className={css.formGroup}>
             <label htmlFor="email">Email</label>
             <input
@@ -58,11 +61,10 @@ export default function SignIn() {
 
           <div className={css.actions}>
             <button type="submit" className={css.submitButton}>
-              Register
+              Log in
             </button>
           </div>
-
-          <p className={css.error}>Error</p>
+          {error && <p className={css.error}>{error}</p>}
         </form>
       </main>
     </>

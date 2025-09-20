@@ -1,33 +1,52 @@
 "use client";
 
-import { checkSession, getMe } from "@/lib/api/api/api";
+import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuthStore } from "@/lib/store/authStore";
-import { useEffect } from "react";
+import { getUserProfile, checkSession } from "@/lib/api/clientApi";
+import Loader from "@/app/loading";
 
-type Props = {
+const PUBLIC_ROUTES = ["/sign-in", "/sign-up"];
+const PRIVATE_ROUTES = ["/profile", "/notes"];
+
+export default function AuthProvider({
+  children,
+}: {
   children: React.ReactNode;
-};
-
-const AuthProvider = ({ children }: Props) => {
-  const setUser = useAuthStore((state) => state.setUser);
-  const clearIsAuthenticated = useAuthStore(
-    (state) => state.clearIsAuthenticated
-  );
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { setUser, clearIsAuthenticated, isAuthenticated } = useAuthStore();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const isAuthenticated = await checkSession();
-      if (isAuthenticated) {
-        const user = await getMe();
-        if (user) setUser(user);
-      } else {
+    async function fetchUser() {
+      try {
+        await checkSession();
+        const user = await getUserProfile();
+        setUser(user);
+
+        if (PUBLIC_ROUTES.includes(pathname)) router.replace("/sign-in");
+      } catch (err) {
         clearIsAuthenticated();
+
+        if (PRIVATE_ROUTES.some((route) => pathname.startsWith(route))) {
+          router.replace("/profile");
+        }
+      } finally {
+        setLoading(false);
       }
-    };
+    }
     fetchUser();
-  }, [setUser, clearIsAuthenticated]);
+  }, [clearIsAuthenticated, pathname, router, setUser]);
 
-  return children;
-};
+  if (loading) return <Loader />;
 
-export default AuthProvider;
+  if (
+    !isAuthenticated &&
+    PRIVATE_ROUTES.some((route) => pathname.startsWith(route))
+  )
+    return null;
+
+  return <>{children}</>;
+}

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import css from "./TagsMenu.module.css";
 import Link from "next/link";
-import { getTagsClient } from "@/lib/api/api/clientApi";
+import { getTagsClient } from "@/lib/api/clientApi";
 
 // interface TagsMenuProps {
 //   tags: string[];

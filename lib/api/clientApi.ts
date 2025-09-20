@@ -2,7 +2,7 @@
 
 import { Note } from "@/types/note";
 import { User } from "@/types/user";
-import { RegisterRequest, LoginRequest } from "@/lib/api/api/api";
+import { RegisterRequest, LoginRequest } from "@/types/auth";
 import { nextServer } from "./api";
 import { isAxiosError } from "axios";
 import { NoteTag } from "@/types/note";
@@ -16,6 +16,8 @@ const DEFAULT_TAGS = ["Todo", "Personal", "Work", "Shopping", "Meeting"];
 
 export async function registerClient(data: RegisterRequest): Promise<User> {
   try {
+    console.log(data);
+
     const { data: user } = await nextServer.post<User>("/auth/register", data);
     return user;
   } catch (error) {
@@ -169,3 +171,10 @@ export async function getTagsClient(): Promise<string[]> {
     return DEFAULT_TAGS;
   }
 }
+// export const getMe = async () => {
+//   const { data } = await nextServer.get<User>("/auth/me");
+//   return data;
+// };
+export const logout = async (): Promise<void> => {
+  await nextServer.post("/auth/logout");
+};

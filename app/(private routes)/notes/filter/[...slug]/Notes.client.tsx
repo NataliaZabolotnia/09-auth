@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import css from "@/app/notes/filter/[...slug]/NotesPage.module.css";
+import css from "@/app/(private routes)/notes/filter/[...slug]/NotesPage.module.css";
 import "modern-normalize/modern-normalize.css";
 import SearchBox from "@/components/SearchBox/SearchBox";
-import { fetchNotes } from "@/lib/api";
+import { fetchNotesClient } from "@/lib/api/clientApi";
 import NoteList from "@/components/NoteList/NoteList";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import Pagination from "@/components/Pagination/Pagination";
@@ -24,7 +24,7 @@ export default function Notes({ initialPage, initialQuery, tag }: NotesProps) {
   const [inputValue, setInputValue] = useState(initialQuery);
   const { data, isLoading, error } = useQuery({
     queryKey: ["notes", currentPage, searchText, tag],
-    queryFn: () => fetchNotes(currentPage, searchText, tag),
+    queryFn: () => fetchNotesClient(searchText, currentPage, 12, tag),
     // placeholderData: keepPreviousData,
   });
 

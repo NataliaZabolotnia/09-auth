@@ -2,7 +2,8 @@ import css from "@/app/(private routes)/profile/ProfilePage.module.css";
 import { Metadata } from "next";
 import Link from "next/link";
 import { User } from "@/types/user";
-import { getUserProfile } from "@/lib/api/api/clientApi";
+import { getUserProfile } from "@/lib/api/serverApi";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "User Profile",
@@ -49,8 +50,8 @@ export default async function Profile() {
             </Link>
           </div>
           <div className={css.avatarWrapper}>
-            <img
-              src="Avatar"
+            <Image
+              src="https://ac.goit.global/fullstack/react/notehub-og-meta.jpg"
               alt="User Avatar"
               width={120}
               height={120}
